@@ -1,5 +1,28 @@
 ## NextJS API: Account-lockout
 
+![](https://imgur.com/49YXyNy.png)
+
+### schema.prisma
+```bash
+model User {
+  id                    String   @id @default(cuid())
+  name                  String
+  email                 String   @unique
+  passwordHash          String
+  role                  Role     @default(USER)
+  isVerified            Boolean  @default(false)
+
+  failedLoginAttempts   Int      @default(0)
+  lockedUntil           DateTime?
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  refreshTokens RefreshToken[]
+  emailOtps     EmailOtp[]
+}
+```
+---
+
 ### lib/auth/lockout.ts
 ```bash
 import prisma from "@/lib/prisma";
@@ -52,5 +75,3 @@ export { MAX_FAILED_ATTEMPTS, LOCKOUT_DURATION_MINUTES };
 
 ```
 ---
-
-![](https://imgur.com/49YXyNy.png)
